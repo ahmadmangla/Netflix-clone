@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectToMongo = () => {
 
-    const mongoURI = 'mongodb://localhost:2701227/test';
+    const mongoURI = 'mongodb://localhost:27017';
 
     mongoose.connect(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true}, (err)=>{
         if(err){
