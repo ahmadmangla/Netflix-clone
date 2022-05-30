@@ -2,8 +2,13 @@ import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import user from '../models/User.js';
+import jsonwebtoken from 'jsonwebtoken';
+
 
 const router = Router();
+const jwt = jsonwebtoken;
+
+
 
 
 router.post("/register",
@@ -12,6 +17,7 @@ router.post("/register",
     body('email', "Please enter a valid email").isEmail(),
     body('password', "Please enter password of minimum 5 characters").isLength({ min: 5 }),
     async (req, res) => {
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -31,8 +37,17 @@ router.post("/register",
             })
 
             newUser.save();
+            success = true;
 
-            res.status(200).send(newUser);
+            const data = {
+                user: {
+                    id: newUser.id
+                }
+            }
+
+            const token = jwt.sign(data, 'shhhhhsdsd2323232332');
+
+            res.status(200).json({success, token});
 
         } catch (error) {
             res.status(500).json({ error: error })
